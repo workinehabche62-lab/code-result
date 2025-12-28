@@ -1,74 +1,106 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amhara Region Damot Secondary School 2018 Result</title>
-    
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
+    <title>Damot General School - Student Result</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f4; text-align: center; padding: 20px; }
-        .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
-        button { width: 95%; padding: 10px; background: #e73c7e; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        #resPanel { display: none; margin-top: 20px; padding: 15px; background: #fff0f5; border-radius: 10px; text-align: left; }
+        :root { --primary: #2c3e50; --secondary: #3498db; --accent: #e74c3c; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; }
+        h2 { color: var(--primary); margin-bottom: 25px; border-bottom: 2px solid var(--secondary); padding-bottom: 10px; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        button { width: 95%; padding: 12px; background: var(--secondary); color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: var(--primary); }
+        
+        #resPanel { margin-top: 30px; padding: 20px; border: 1px solid #eee; border-radius: 12px; background: #fafafa; display: none; text-align: left; }
+        .profile-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--secondary); display: block; margin: 0 auto 15px; }
+        .result-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .total-box { background: var(--primary); color: white; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center; }
+        .status-pass { color: #27ae60; font-weight: bold; font-size: 20px; text-align: center; display: block; margin-top: 10px; }
+        .status-fail { color: var(--accent); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>DAMOT SECONDARY SCHOOL</h2>
-    <p>2018 Result Portal</p>
-    <input type="text" id="uId" placeholder="Admission Number (e.g. 156100)">
-    <button id="searchBtn" onclick="fetchResult()">View Result</button>
+    <h2>Damot General School</h2>
+    <p>ውጤትዎን ለማየት መለያ ቁጥርና ሚስጥር ቁጥር ያስገቡ</p>
+    <input type="text" id="admInput" placeholder="Admission Number (e.g. 156100)">
+    <input type="password" id="passInput" placeholder="Password">
+    <button onclick="checkResult()">ውጤት አሳይ</button>
 
     <div id="resPanel">
-        <h3 id="rName" style="color: #e73c7e;"></h3>
-        <div id="scoreArea"></div>
+        <img id="rPhoto" class="profile-img" src="" alt="Student Photo">
+        <h3 id="rName" style="text-align:center; color: var(--primary);"></h3>
+        <p style="text-align:center; color: #666;">Grade: <span id="rGrade"></span> | Section: <span id="rSection"></span></p>
+        
+        <div class="result-row"><span>Maths:</span> <b id="rMaths"></b></div>
+        <div class="result-row"><span>English:</span> <b id="rEnglish"></b></div>
+        <div class="result-row"><span>Chemistry:</span> <b id="rChemistry"></b></div>
+        <div class="result-row"><span>Biology:</span> <b id="rBiology"></b></div>
+        <div class="result-row"><span>Physics:</span> <b id="rPhysics"></b></div>
+        <div class="result-row"><span>Geography:</span> <b id="rGeography"></b></div>
+        
+        <div class="total-box">
+            <div>ጠቅላላ ውጤት (Total): <span id="rTotal" style="font-size: 20px;"></span></div>
+            <div>አማካይ (Average): <span id="rAverage"></span>%</div>
+        </div>
+        <span id="rStatus" class="status-pass"></span>
     </div>
 </div>
 
-<script>
-    // ያንተ የ Firebase Config
-    const firebaseConfig = {
-        apiKey: "AIzaSyDqX185jJuZU5SGEjVVNCGNh5aS0hgov58",
-        authDomain: "damoto-school-result.firebaseapp.com",
-        databaseURL: "https://damoto-school-result-default-rtdb.firebaseio.com",
-        projectId: "damoto-school-result",
-        storageBucket: "damoto-school-result.firebasestorage.app",
-        messagingSenderId: "419800691638",
-        appId: "1:419800691638:web:d08ae5311b85f24bb28717"
-    };
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-    // Firebase-ን ማስጀመር
+<script>
+    // እዚህ ጋር የራስህን የ Firebase Config መረጃ አስገባ
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
+        databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+        projectId: "YOUR_PROJECT",
+        storageBucket: "YOUR_PROJECT.appspot.com",
+        messagingSenderId: "YOUR_ID",
+        appId: "YOUR_APP_ID"
+    };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    function fetchResult() {
-        const id = document.getElementById('uId').value;
-        const btn = document.getElementById('searchBtn');
+    function checkResult() {
+        let adm = document.getElementById('admInput').value;
+        let pass = document.getElementById('passInput').value;
         
-        if(!id) return alert("Please enter Admission Number!");
-        btn.innerText = "Searching...";
+        if(!adm || !pass) { alert("እባክዎ መረጃዎችን በትክክል ይሙሉ!"); return; }
 
-        // Firebase ውስጥ መፈለግ
-        db.ref('students/' + id).once('value', (snapshot) => {
+        db.ref('students/' + adm).once('value').then((snapshot) => {
             const data = snapshot.val();
             if (data) {
-                document.getElementById('resPanel').style.display = "block";
-                document.getElementById('rName').innerText = "Name: " + data.name;
-                document.getElementById('scoreArea').innerHTML = `
-                    <p>Math: ${data.math}</p>
-                    <p>English: ${data.english}</p>
-                    <p>Average: ${data.average}%</p>
-                    <p>Status: <b>${data.status}</b></p>
-                `;
+                if (data.password == pass) { // Password ማረጋገጫ
+                    document.getElementById('rName').innerText = data.name;
+                    document.getElementById('rGrade').innerText = data.grade;
+                    document.getElementById('rSection').innerText = data.section;
+                    document.getElementById('rMaths').innerText = data.maths;
+                    document.getElementById('rEnglish').innerText = data.english;
+                    document.getElementById('rChemistry').innerText = data.chemistry;
+                    document.getElementById('rBiology').innerText = data.biology;
+                    document.getElementById('rPhysics').innerText = data.physics;
+                    document.getElementById('rGeography').innerText = data.geography;
+                    document.getElementById('rTotal').innerText = data.total;
+                    document.getElementById('rAverage').innerText = data.average;
+                    document.getElementById('rStatus').innerText = data.status;
+                    
+                    if(data.photoURL) { // ፎቶውን ከ GitHub ሊንክ መጫን
+                        document.getElementById('rPhoto').src = data.photoURL;
+                        document.getElementById('rPhoto').style.display = "block";
+                    }
+                    document.getElementById('resPanel').style.display = "block";
+                } else {
+                    alert("የተሳሳተ ሚስጥር ቁጥር!");
+                }
             } else {
-                alert("Student Not Found! Please check your ID.");
+                alert("ተማሪው አልተገኘም!");
             }
-            btn.innerText = "View Result";
         });
     }
 </script>
