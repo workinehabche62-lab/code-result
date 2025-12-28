@@ -37,7 +37,6 @@
             backdrop-filter: blur(10px);
         }
         
-        /* Language Bar Styling */
         .lang-bar { background: #f1f3f5; padding: 15px; text-align: center; border-bottom: 1px solid #ddd; }
         .lang-btn { 
             background: white; border: 1px solid #cbd5e0; padding: 8px 16px; 
@@ -72,7 +71,6 @@
         #resultArea { display: none; padding: 40px; animation: slideUp 0.6s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Result Profile */
         .profile-header { text-align: center; margin-bottom: 35px; }
         .student-photo { 
             width: 150px; height: 150px; border-radius: 50%; 
@@ -85,7 +83,6 @@
         .name-yellow { color: #FCD116; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
         .name-red { color: #CD1319; }
         
-        /* Result Status Highlight */
         .status-passed { 
             color: #2ecc71 !important; font-weight: 900 !important; 
             font-size: 30px !important; letter-spacing: 2px;
@@ -112,7 +109,6 @@
         .ribbon-item span { font-size: 13px; opacity: 0.9; text-transform: uppercase; display: block; margin-bottom: 5px; }
         .ribbon-item b { font-size: 26px; }
 
-        /* Table Styling */
         table { width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden; background: white; }
         th { background: var(--primary); color: white; padding: 15px; font-size: 14px; text-transform: uppercase; }
         td { padding: 14px; border-bottom: 1px solid #edf2f7; text-align: center; color: #4a5568; font-size: 15px; }
@@ -131,16 +127,16 @@
 
 <div class="container" id="printableArea">
     <div class="lang-bar">
-        <button class="lang-btn active" onclick="setLanguage('am')">አማርኛ</button>
-        <button class="lang-btn" onclick="setLanguage('en')">English</button>
-        <button class="lang-btn" onclick="setLanguage('om')">Oromoo</button>
-        <button class="lang-btn" onclick="setLanguage('so')">Soomaali</button>
-        <button class="lang-btn" onclick="setLanguage('ti')">ትግርኛ</button>
+        <button class="lang-btn active" onclick="setLanguage('am', this)">አማርኛ</button>
+        <button class="lang-btn" onclick="setLanguage('en', this)">English</button>
+        <button class="lang-btn" onclick="setLanguage('om', this)">Oromoo</button>
+        <button class="lang-btn" onclick="setLanguage('so', this)">Soomaali</button>
+        <button class="lang-btn" onclick="setLanguage('ti', this)">ትግርኛ</button>
     </div>
 
     <div class="school-banner">
         <h1 id="t_school">DAMOT GENERAL SECONDARY SCHOOL</h1>
-        <p style="margin:0; opacity:0.8; font-weight:300;">Quality Education for a Better Future</p>
+        <p id="t_slogan" style="margin:0; opacity:0.8; font-weight:300;">Quality Education for a Better Future</p>
     </div>
 
     <div id="loginSection" class="login-card">
@@ -200,13 +196,17 @@
 
 <script>
     const translations = {
-        am: { school: "ዳሞት አጠቃላይ ሁለተኛ ደረጃ ትምህርት ቤት", welcome: "እንኳን ደህና መጡ!", viewBtn: "ውጤት ይመልከቱ", l_id: "መለያ ቁጥር", l_gen: "ጾታ", l_grade: "ክፍልና ሴክሽን", l_year: "ትምህርት ዘመን", l_nat: "ዜግነት", l_zone: "ዞን", l_wor: "ወረዳ", l_sch: "ትምህርት ቤት", l_total: "ጠቅላላ ውጤት", l_avg: "አማካይ", l_status: "ሁኔታ", h_sub: "ትምህርት", h_tot: "ድምር", h_grd: "ደረጃ", download: "ውጤት አውርድ (PDF)", call: "ቅሬታ ለማቅረብ: 0961364574" },
-        en: { school: "DAMOT GENERAL SECONDARY SCHOOL", welcome: "Welcome Back!", viewBtn: "View Result Now", l_id: "Admission No", l_gen: "Gender", l_grade: "Grade & Section", l_year: "Academic Year", l_nat: "Nationality", l_zone: "Zone", l_wor: "Woreda", l_sch: "School", l_total: "Total Score", l_avg: "Average", l_status: "Status", h_sub: "Subject", h_tot: "Total", h_grd: "Grade", download: "Download PDF Report", call: "Complaint: 0961364574" }
+        am: { school: "ዳሞት አጠቃላይ ሁለተኛ ደረጃ ትምህርት ቤት", slogan: "ጥራት ያለው ትምህርት ለተሻለ መጻኢ", welcome: "እንኳን ደህና መጡ!", viewBtn: "ውጤት ይመልከቱ", l_id: "መለያ ቁጥር", l_gen: "ጾታ", l_grade: "ክፍልና ሴክሽን", l_year: "ትምህርት ዘመን", l_nat: "ዜግነት", l_zone: "ዞን", l_wor: "ወረዳ", l_sch: "ትምህርት ቤት", l_total: "ጠቅላላ ውጤት", l_avg: "አማካይ", l_status: "ሁኔታ", h_sub: "ትምህርት", h_tot: "ድምር", h_grd: "ደረጃ", download: "ውጤት አውርድ (PDF)", call: "ቅሬታ ለማቅረብ: 0961364574", report: "ይህ የተማሪው ኦፊሴላዊ ውጤት መግለጫ ነው" },
+        en: { school: "DAMOT GENERAL SECONDARY SCHOOL", slogan: "Quality Education for a Better Future", welcome: "Welcome Back!", viewBtn: "View Result Now", l_id: "Admission No", l_gen: "Gender", l_grade: "Grade & Section", l_year: "Academic Year", l_nat: "Nationality", l_zone: "Zone", l_wor: "Woreda", l_sch: "School", l_total: "Total Score", l_avg: "Average", l_status: "Status", h_sub: "Subject", h_tot: "Total", h_grd: "Grade", download: "Download PDF Report", call: "Complaint: 0961364574", report: "OFFICIAL STUDENT REPORT CARD" },
+        om: { school: "MANA BARUMSA DAMOT", slogan: "Barnoota Qulqulluu Jireenya Wayyaaf", welcome: "Baga Nagaan Dhuftan!", viewBtn: "Bu'aa Ilaali", l_id: "ID Galmee", l_gen: "Korniyaa", l_grade: "Kutaa & Seeksinii", l_year: "Bara Barnootaa", l_nat: "Lammummaa", l_zone: "Zoonii", l_wor: "Aanaa", l_sch: "Mana Barumsaa", l_total: "Ida'ama", l_avg: "Giddu-galeessa", l_status: "Haala", h_sub: "Barnoota", h_tot: "Total", h_grd: "Gireedii", download: "PDF Buusi", call: "Koomii: 0961364574", report: "GABAASA BU'AA BARATAA" },
+        so: { school: "DUGSIYADA SARE EE DAMOT", slogan: "Waxbarasho tayo leh mustaqbal wanaagsan", welcome: "Ku soo dhawaada!", viewBtn: "Arag Natiijada", l_id: "ID-ga", l_gen: "Lab/Dhadig", l_grade: "Fasalka & Qaybta", l_year: "Sannad Dugsiyeedka", l_nat: "Dhalashada", l_zone: "Aagga", l_wor: "Degmada", l_sch: "Dugsiga", l_total: "Warta", l_avg: "Celceliska", l_status: "Xaaladda", h_sub: "Maadada", h_tot: "Total", h_grd: "Darajada", download: "Soo deji PDF", call: "Cabashada: 0961364574", report: "WARBIXINTA NATIIJADA ARDAYGA" },
+        ti: { school: "ዳሞት ካልኣይ ደረጃ ቤት ትምህርቲ", slogan: "ፅሬት ዘለዎ ትምህርቲ ንዝበለፀ መፃኢ", welcome: "እንኳዕ ብደሓን መጻእኩም!", viewBtn: "ውጽኢት ርአ", l_id: "መፍለዪ ቑፅሪ", l_gen: "ፆታ", l_grade: "ክፍሊ & ሴክሽን", l_year: "ዓመት ትምህርቲ", l_nat: "ዜግነት", l_zone: "ዞባ", l_wor: "ወረዳ", l_sch: "ቤት ትምህርቲ", l_total: "ጠቕላላ ውፅኢት", l_avg: "ማእከላይ", l_status: "ኩነታት", h_sub: "ትምህርቲ", h_tot: "ድምር", h_grd: "ደረጃ", download: "PDF ኣውርድ", call: "ቅሬታ ንምቕራብ: 0961364574", report: "ወግዓዊ መግለፂ ውፅኢት ተምሃራይ" }
     };
 
-    function setLanguage(lang) {
+    function setLanguage(lang, btn) {
         const t = translations[lang] || translations['en'];
         document.getElementById('t_school').innerText = t.school;
+        document.getElementById('t_slogan').innerText = t.slogan;
         document.getElementById('t_welcome').innerText = t.welcome;
         document.getElementById('t_viewBtn').innerText = t.viewBtn;
         document.getElementById('l_id').innerText = t.l_id;
@@ -225,7 +225,10 @@
         document.getElementById('h_grd').innerText = t.h_grd;
         document.getElementById('t_download').innerText = t.download;
         document.getElementById('t_call').innerText = t.call;
+        document.getElementById('pIDLabel').innerText = t.report;
+
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        if(btn) btn.classList.add('active');
     }
 
     const firebaseConfig = {
@@ -280,6 +283,7 @@
                 if(studentStatus.toUpperCase() === "PASSED") {
                     statusElem.className = "status-passed";
                 } else {
+                    statusElem.className = "";
                     statusElem.style.color = "#e63946";
                     statusElem.style.fontWeight = "900";
                 }
