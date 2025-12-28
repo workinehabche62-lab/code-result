@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="njhebUWbBkoK6WBkmyEyU5ntA4YIGMwnI9V6g2Eaw0k" />
-    <title>Damot 2028 Result - Student Portal</title>
+    <title>2018 Result</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -18,18 +17,24 @@
         .lang-btn { background: white; border: 1px solid #ccc; padding: 6px 12px; margin: 3px; cursor: pointer; border-radius: 6px; font-weight: bold; transition: 0.3s; font-size: 13px; }
         .lang-btn:hover, .lang-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .school-banner { background: linear-gradient(90deg, #004a99 0%, #0066cc 100%); color: white; padding: 35px 20px; text-align: center; border-bottom: 6px solid var(--accent); }
-        .highlight-name { color: var(--danger); font-weight: 900; text-transform: uppercase; }
-
+        .school-banner { background: linear-gradient(90deg, #004a99 0%, #0066cc 100%); color: white; padding: 25px 20px; text-align: center; border-bottom: 6px solid var(--accent); }
+        
         .login-card { padding: 60px 20px; text-align: center; background: white; }
         input { width: 85%; max-width: 350px; padding: 14px; margin: 10px 0; border: 2px solid #eee; border-radius: 10px; font-size: 16px; display: block; margin-left: auto; margin-right: auto; }
-        .btn-main { background: var(--primary); color: white; padding: 16px 50px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 18px; margin-top: 15px; transition: 0.3s; }
-        .btn-main:hover { background: #003366; }
+        .btn-main { background: var(--primary); color: white; padding: 16px 50px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 18px; margin-top: 15px; }
 
         #resultArea { display: none; padding: 30px; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        #pName { font-size: 30px; font-weight: 800; color: #333; margin-bottom: 20px; text-align: center; border-bottom: 2px solid var(--secondary); padding-bottom: 10px; }
+        /* ውጤት ሲመጣ የሚታየው የፎቶ እና የስም ስታይል */
+        .profile-header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid var(--secondary); padding-bottom: 20px; }
+        .student-photo { width: 140px; height: 140px; border-radius: 50%; border: 5px solid var(--primary); object-fit: cover; background: #eee; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 0 auto 15px; display: block; }
+        
+        /* የተማሪው ስም በኢትዮጵያ ሰንደቅ ዓላማ ቀለማት */
+        #pName { font-size: 28px; font-weight: 900; margin: 10px 0; text-transform: uppercase; letter-spacing: 1px; }
+        .name-green { color: #138808; }
+        .name-yellow { color: #FCD116; text-shadow: 1px 1px 1px rgba(0,0,0,0.2); }
+        .name-red { color: #CD1319; }
         
         .grid-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 30px; }
         .info-cell { background: #fcfcfc; padding: 10px; border-radius: 8px; border-left: 4px solid var(--primary); text-align: left; }
@@ -39,13 +44,12 @@
         .summary-ribbon { display: flex; justify-content: space-around; background: linear-gradient(45deg, #004a99, #007bff); border-radius: 15px; padding: 20px; margin: 25px 0; color: white; text-align: center; }
         .ribbon-item b { font-size: 24px; display: block; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); }
         th { background: #f8f9fa; color: var(--primary); padding: 12px; font-size: 13px; border: 1px solid var(--border); }
         td { padding: 12px; border: 1px solid var(--border); text-align: center; }
         
         .action-bar { display: flex; gap: 15px; margin-top: 30px; justify-content: center; flex-wrap: wrap; }
-        .btn-call { background: var(--success); color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 14px; }
-        .footer-note { text-align: center; margin-top: 30px; font-size: 12px; color: #777; }
+        .btn-call { background: var(--success); color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -61,7 +65,6 @@
 
     <div class="school-banner">
         <h1 id="t_school">DAMOT GENERAL SECONDARY SCHOOL</h1>
-        <p id="t_subtitle">Developed by <span class="highlight-name">Workineh</span></p>
     </div>
 
     <div id="loginSection" class="login-card">
@@ -73,7 +76,11 @@
     </div>
 
     <div id="resultArea">
-        <div id="pName"></div>
+        <div class="profile-header">
+            <img id="pPhoto" src="https://via.placeholder.com/140" class="student-photo" alt="Photo">
+            <div id="pName"></div>
+            <div style="color: var(--primary); font-weight: bold;" id="pIDLabel">STUDENT REPORT CARD</div>
+        </div>
         
         <div class="grid-info">
             <div class="info-cell"><label id="l_id">Admission No</label><div id="pID"></div></div>
@@ -107,11 +114,8 @@
 
         <div class="action-bar">
             <button class="btn-main" style="background:#333; margin:0; padding: 12px 25px;" id="t_download" onclick="downloadPDF()">Download PDF</button>
-            <a href="tel:0961364574" class="btn-call">
-                📞 <span id="t_call">Call Complaint: 0961364574</span>
-            </a>
+            <a href="tel:0961364574" class="btn-call">📞 <span id="t_call">Call Complaint: 0961364574</span></a>
         </div>
-        <div class="footer-note">© 2028 Damot General Secondary School - All Rights Reserved.</div>
     </div>
 </div>
 
@@ -149,7 +153,6 @@
         document.getElementById('t_download').innerText = t.download;
         document.getElementById('t_call').innerText = t.call;
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
     }
 
     const firebaseConfig = {
@@ -165,17 +168,27 @@
     const db = firebase.database();
 
     function loadStudentResult() {
-        const name = document.getElementById('regName').value.trim().toLowerCase();
+        const nameInput = document.getElementById('regName').value.trim();
         const id = document.getElementById('regID').value.trim();
         const pass = document.getElementById('regPass').value.trim();
 
         db.ref('students/' + id).once('value').then(snap => {
             const data = snap.val();
-            if(data && data.password == pass && data.name.toLowerCase() === name) {
+            if(data && data.password == pass && data.name.toLowerCase() === nameInput.toLowerCase()) {
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('resultArea').style.display = 'block';
 
-                document.getElementById('pName').innerText = data.name;
+                document.getElementById('pPhoto').src = data.photoURL || "https://via.placeholder.com/140";
+                
+                // ስሙን በቀለማት የሚከፋፍል ፈንክሽን
+                const nameArr = data.name.split(' ');
+                let coloredName = "";
+                nameArr.forEach((word, idx) => {
+                    let cls = idx === 0 ? "name-green" : idx === 1 ? "name-yellow" : "name-red";
+                    coloredName += `<span class="${cls}">${word}</span> `;
+                });
+                document.getElementById('pName').innerHTML = coloredName;
+
                 document.getElementById('pID').innerText = id;
                 document.getElementById('pGen').innerText = data.gender || "M/F";
                 document.getElementById('pGrade').innerText = (data.grade || "10") + " (" + (data.section || "A") + ")";
@@ -212,7 +225,7 @@
 
     function downloadPDF() {
         const element = document.getElementById('printableArea');
-        html2pdf().from(element).save('Damot_Result_2028.pdf');
+        html2pdf().from(element).save('Result_2018.pdf');
     }
 </script>
 </body>
