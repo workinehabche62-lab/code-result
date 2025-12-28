@@ -2,77 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Damot General School - Student Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="viewresult" content="width=device-width, initial-scale=1.0">
+    <title>Damot General School - Student Result</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root { --primary: #1e293b; --accent: #2563eb; --success: #10b981; --bg: #f1f5f9; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .card { background: white; width: 100%; max-width: 500px; border-radius: 28px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #e2e8f0; }
-        .header { background: var(--primary); color: white; padding: 50px 20px; text-align: center; position: relative; }
-        .school-logo { width: 80px; height: 80px; background: white; border-radius: 20px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: bold; font-size: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2); }
-        .lang-switcher { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 15px; background: #f8fafc; border-bottom: 1px solid #f1f5f9; }
-        .lang-btn { padding: 6px 14px; font-size: 13px; border: 1.5px solid #e2e8f0; border-radius: 20px; cursor: pointer; background: white; transition: 0.3s; color: #64748b; }
-        .lang-btn.active { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
-        .content { padding: 35px; }
-        .input-group { position: relative; margin-bottom: 20px; }
-        input { width: 100%; padding: 16px; border: 2px solid #f1f5f9; border-radius: 14px; box-sizing: border-box; font-size: 16px; outline: none; transition: 0.4s; background: #f8fafc; }
-        input:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
-        button { width: 100%; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 14px; font-size: 17px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 5px; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); }
-        button:hover { background: #1d4ed8; transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.4); }
-        #resPanel { display: none; padding: 0 35px 35px; animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .profile-section { text-align: center; margin-bottom: 25px; }
-        .profile-img { width: 120px; height: 120px; border-radius: 30px; border: 5px solid #fff; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); display: block; margin: -60px auto 15px; object-fit: cover; background: #f1f5f9; }
-        .score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .score-item { background: #f8fafc; padding: 15px; border-radius: 15px; border: 1px solid #f1f5f9; text-align: center; transition: 0.3s; }
-        .score-item:hover { background: white; border-color: var(--accent); transform: scale(1.03); }
-        .score-item span { display: block; font-size: 12px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .score-item b { font-size: 20px; color: var(--primary); }
-        .badge { background: var(--primary); color: white; padding: 20px; border-radius: 20px; margin-top: 25px; display: flex; justify-content: space-around; align-items: center; background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
+        :root { --primary: #004a99; --secondary: #fdfaf5; --border: #ccc; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--secondary); margin: 0; padding: 15px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden; }
+        .school-banner { background: var(--primary); color: white; padding: 30px; text-align: center; border-bottom: 5px solid #ffcc00; }
+        .login-card { padding: 60px 20px; text-align: center; }
+        input { width: 90%; max-width: 350px; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; outline: none; }
+        .btn-main { background: var(--primary); color: white; padding: 14px 40px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        #resultArea { display: none; padding: 20px; }
+        .profile-header { display: flex; align-items: center; gap: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 20px; margin-bottom: 20px; }
+        .student-photo { width: 120px; height: 120px; border-radius: 10px; border: 3px solid var(--primary); object-fit: cover; background: #eee; }
+        .grid-info { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; text-align: left; }
+        .info-cell { border-bottom: 1px solid #eee; padding: 8px 0; }
+        .info-cell label { font-size: 11px; color: #888; text-transform: uppercase; font-weight: bold; }
+        .summary-ribbon { display: flex; justify-content: space-around; background: #f8f9fa; border-radius: 10px; padding: 20px; border: 1px solid #eee; }
+        .ribbon-item { text-align: center; }
+        .ribbon-item b { font-size: 22px; color: var(--primary); display: block; }
+        .status-highlight { font-size: 28px; font-weight: 900; color: #008000; text-transform: uppercase; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #f1f1f1; text-align: center; padding: 12px; font-size: 13px; border: 1px solid var(--border); }
+        td { padding: 12px; border: 1px solid var(--border); text-align: center; font-size: 14px; }
+        .action-bar { display: flex; gap: 10px; margin-top: 30px; justify-content: center; }
+        .btn-action { padding: 12px 25px; border-radius: 6px; cursor: pointer; border: none; font-weight: bold; text-decoration: none; }
+        .btn-download { background: #0056b3; color: white; }
+        .btn-complaint { background: #25d366; color: white; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <div class="header">
-        <div class="school-logo">DS</div>
-        <h2 id="title" style="margin: 0; font-size: 24px;">Damot General School</h2>
-        <p id="subtitle" style="opacity: 0.7; font-size: 14px; margin: 8px 0 0;">Student Result Management System</p>
+<div class="container" id="printableArea">
+    <div class="school-banner">
+        <h1>DAMOT GENERAL SECONDARY SCHOOL</h1>
+        <p style="margin: 5px 0 0; opacity: 0.8;">Student Result Management Portal</p>
     </div>
 
-    <div class="lang-switcher">
-        <button class="lang-btn active" onclick="setLang('en')">English</button>
-        <button class="lang-btn" onclick="setLang('am')">አማርኛ</button>
-        <button class="lang-btn" onclick="setLang('or')">Oromoo</button>
+    <div id="loginSection" class="login-card">
+        <input type="text" id="regID" placeholder="Registration Number (156100)">
+        <input type="password" id="regPass" placeholder="Password">
+        <br><br>
+        <button class="btn-main" onclick="loadStudentResult()">Access Portal</button>
     </div>
 
-    <div class="content">
-        <div class="input-group">
-            <input type="text" id="admInput" placeholder="Admission ID">
+    <div id="resultArea">
+        <div class="profile-header">
+            <img id="pPhoto" src="" class="student-photo" alt="Student Profile">
+            <div>
+                <h2 id="pName" style="margin:0; color:var(--primary);"></h2>
+                <div id="pHeaderStatus" class="status-highlight"></div>
+            </div>
         </div>
-        <div class="input-group">
-            <input type="password" id="passInput" placeholder="Password">
-        </div>
-        <button id="btnText" onclick="checkResult()">Access Result</button>
-    </div>
 
-    <div id="resPanel">
-        <div class="profile-section">
-            <img id="rPhoto" class="profile-img" src="" alt="Student Profile">
-            <h3 id="rName" style="margin: 0; color: var(--primary); font-size: 22px;"></h3>
-            <p id="rMeta" style="color: #64748b; font-size: 14px; margin-top: 5px; font-weight: 500;"></p>
+        <div class="grid-info">
+            <div class="info-cell"><label>Registration No</label><div id="pID"></div></div>
+            <div class="info-cell"><label>Gender</label><div id="pGen"></div></div>
+            <div class="info-cell"><label>Grade & Section</label><div id="pGrade"></div></div>
+            <div class="info-cell"><label>Academic Year</label><div id="pYear"></div></div>
+            <div class="info-cell"><label>Nationality</label><div id="pNat"></div></div>
+            <div class="info-cell"><label>Zone</label><div id="pZone"></div></div>
+            <div class="info-cell"><label>Woreda</label><div id="pWor"></div></div>
+            <div class="info-cell"><label>School</label><div id="pSch"></div></div>
         </div>
-        
-        <div class="score-grid" id="subjectsList"></div>
-        
-        <div class="badge">
-            <div style="text-align:center"><small id="lblTotal" style="opacity: 0.7;">Total Marks</small><div id="rTotal" style="font-weight:600; font-size:22px;"></div></div>
-            <div style="text-align:center; height: 40px; width: 1px; background: rgba(255,255,255,0.2);"></div>
-            <div style="text-align:center"><small id="lblAvg" style="opacity: 0.7;">Average</small><div id="rAverage" style="font-weight:600; font-size:22px;"></div></div>
+
+        <div class="summary-ribbon">
+            <div class="ribbon-item"><span>Total (100%)</span><b id="pTotal"></b></div>
+            <div class="ribbon-item"><span>Average</span><b id="pAvg"></b></div>
+            <div class="ribbon-item"><span>Status</span><b id="pRibbonStatus" style="color: #008000;"></b></div>
         </div>
-        
-        <div id="rStatus" style="text-align:center; margin-top:20px; font-weight:bold; font-size:22px; text-transform: uppercase; letter-spacing: 1px;"></div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2">Subject Name</th>
+                    <th colspan="2">Assessment Scores</th>
+                    <th rowspan="2">Total (100)</th>
+                    <th rowspan="2">Grade</th>
+                </tr>
+                <tr>
+                    <th>40%</th>
+                    <th>60%</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+
+        <div class="action-bar">
+            <button class="btn-action btn-download" onclick="downloadPDF()">Download PDF</button>
+            <a href="tel:0961364574" class="btn-action btn-complaint">Complaint: 0961364574</a>
+        </div>
     </div>
 </div>
 
@@ -80,7 +101,6 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    // Firebase Config (Keep your existing one)
     const firebaseConfig = {
       apiKey: "AIzaSyDqX185jJuZU5SGEjVVNCGNh5aS0hgov58",
       authDomain: "damoto-school-result.firebaseapp.com",
@@ -93,60 +113,123 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const i18n = {
-        en: { title: "Damot General School", sub: "Student Result Management System", id: "Admission ID", pass: "Password", btn: "Access Result", total: "Total Marks", avg: "Average", subjects: ["Maths", "English", "Chemistry", "Biology", "Physics", "Geography"] },
-        am: { title: "ዳሞት አጠቃላይ ትምህርት ቤት", sub: "የተማሪዎች ውጤት መግቢያ", id: "መለያ ቁጥር", pass: "ሚስጥር ቁጥር", btn: "ውጤት አሳይ", total: "ጠቅላላ ውጤት", avg: "አማካይ", subjects: ["ሒሳብ", "እንግሊዝኛ", "ኬሚስትሪ", "ባዮሎጂ", "ፊዚክስ", "ጂኦግራፊ"] },
-        or: { title: "Mana Barumsa Daamoot", sub: "Seensa Bu'aa Barattootaa", id: "Lakkoofsa Galmee", pass: "Jecha Iccitii", btn: "Bu'aa Ilaali", total: "Waliigala", avg: "Giddu-galeessa", subjects: ["Herrega", "Ingiliffa", "Keemistirii", "Baayoloojii", "Fiiziksii", "Joograafii"] }
-    };
+    function loadStudentResult() {
+        const id = document.getElementById('regID').value;
+        const pass = document.getElementById('regPass').value;
 
-    let currentLang = 'en';
-    function setLang(lang) {
-        currentLang = lang;
-        document.getElementById('title').innerText = i18n[lang].title;
-        document.getElementById('subtitle').innerText = i18n[lang].sub;
-        document.getElementById('admInput').placeholder = i18n[lang].id;
-        document.getElementById('passInput').placeholder = i18n[lang].pass;
-        document.getElementById('btnText').innerText = i18n[lang].btn;
-        document.getElementById('lblTotal').innerText = i18n[lang].total;
-        document.getElementById('lblAvg').innerText = i18n[lang].avg;
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
-    }
+        db.ref('students/' + id).once('value').then(snap => {
+            const data = snap.val();
+            if(data && data.password == pass) {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('resultArea').style.display = 'block';
 
-    function checkResult() {
-        const adm = document.getElementById('admInput').value;
-        const pass = document.getElementById('passInput').value;
-        if(!adm || !pass) return;
+                document.getElementById('pPhoto').src = data.photoURL || "";
+                document.getElementById('pName').innerText = data.name || "N/A";
+                document.getElementById('pID').innerText = id;
+                document.getElementById('pGen').innerText = data.gender || "Male";
+                document.getElementById('pGrade').innerText = (data.grade || "") + " (" + (data.section || "") + ")";
+                document.getElementById('pYear').innerText = data.academicYear || "2018 E.C";
+                document.getElementById('pNat').innerText = data.nationality || "Ethiopian";
+                document.getElementById('pZone').innerText = data.zone || "West Gojjam";
+                document.getElementById('pWor').innerText = data.woreda || "Finote Selam";
+                document.getElementById('pSch').innerText = data.school || "Damot General Secondary School";
+                document.getElementById('pTotal').innerText = data.total || "0";
+                document.getElementById('pAvg').innerText = (data.average || "0") + "%";
+                
+                const statusValue = data.status || "PASSED";
+                document.getElementById('pHeaderStatus').innerText = statusValue;
+                document.getElementById('pRibbonStatus').innerText = statusValue;
 
-        db.ref('students/' + adm).once('value').then((snapshot) => {
-            const data = snapshot.val();
-            if (data && data.password == pass) {
-                showResult(data);
-            } else { alert("Error: ID or Password incorrect!"); }
+                // 40% እና 60% ዳታዎችን እዚህ ጋር በትክክል እንቀበላለን
+                const subjects = [
+                    { name: "Mathematics", s40: data.maths40, s60: data.maths60, tot: data.maths },
+                    { name: "English", s40: data.english40, s60: data.english60, tot: data.english },
+                    { name: "Biology", s40: data.biology40, s60: data.biology60, tot: data.biology },
+                    { name: "Chemistry", s40: data.chemistry40, s60: data.chemistry60, tot: data.chemistry },
+                    { name: "Physics", s40: data.physics40, s60: data.physics60, tot: data.physics },
+                    { name: "Geography", s40: data.geography40, s60: data.geography60, tot: data.geography }
+                ];
+
+                let tableRows = "";
+                subjects.forEach(s => {
+                    let grade = s.tot >= 90 ? "A+" : s.tot >= 80 ? "A" : s.tot >= 70 ? "B" : s.tot >= 50 ? "C" : "D";
+                    // 0 ቢሆኑም ቁጥሮቹን እንዲያሳይ s40 || 0 ተብሏል
+                    tableRows += `<tr>
+                        <td style="text-align:left">${s.name}</td>
+                        <td>${s.s40 !== undefined ? s.s40 : "-"}</td>
+                        <td>${s.s60 !== undefined ? s.s60 : "-"}</td>
+                        <td><b>${s.tot || 0}</b></td>
+                        <td>${grade}</td>
+                    </tr>`;
+                });
+                document.getElementById('tableBody').innerHTML = tableRows;
+
+            } else { alert("ID or Password incorrect!"); }
         });
     }
 
-    function showResult(data) {
-        document.getElementById('rName').innerText = data.name;
-        document.getElementById('rMeta').innerText = `Grade ${data.grade} • Section ${data.section}`;
-        document.getElementById('rTotal').innerText = data.total;
-        document.getElementById('rAverage').innerText = data.average + "%";
-        document.getElementById('rStatus').innerText = data.status;
-        document.getElementById('rStatus').style.color = data.status.toLowerCase().includes('pass') ? '#10b981' : '#ef4444';
-        
-        // Use default image if photoURL is missing
-        document.getElementById('rPhoto').src = data.photoURL || "https://via.placeholder.com/120";
+    function downloadPDF() {
+        const element = document.getElementById('printableArea');
+        html2pdf().from(element).save('Student_Result.pdf');
+    }
+</script><script>
+    // Firebase ማገናኛ (config) እንዳለ ሆኖ ከስር ያለውን Function አስተካክለው
+    function loadStudentResult() {
+        const id = document.getElementById('regID').value;
+        const pass = document.getElementById('regPass').value;
 
-        const subjects = i18n[currentLang].subjects;
-        const marks = [data.maths, data.english, data.chemistry, data.biology, data.physics, data.geography];
-        let html = '';
-        subjects.forEach((s, i) => {
-            html += `<div class="score-item"><span>${s}</span> <b>${marks[i] || 0}</b></div>`;
+        db.ref('students/' + id).once('value').then(snap => {
+            const data = snap.val();
+            if(data && data.password == pass) {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('resultArea').style.display = 'block';
+
+                // የግል መረጃዎች
+                document.getElementById('pPhoto').src = data.photoURL || "";
+                document.getElementById('pName').innerText = data.name || "N/A";
+                document.getElementById('pID').innerText = id;
+                document.getElementById('pGen').innerText = data.gender || "Male";
+                document.getElementById('pGrade').innerText = (data.grade || "") + " (" + (data.section || "") + ")";
+                document.getElementById('pYear').innerText = data.academicYear || "2018 E.C";
+                document.getElementById('pNat').innerText = data.nationality || "Ethiopian";
+                document.getElementById('pZone').innerText = data.zone || "West Gojjam";
+                document.getElementById('pWor').innerText = data.woreda || "Finote Selam";
+                document.getElementById('pSch').innerText = data.school || "Damot General Secondary School";
+                
+                // ማጠቃለያ
+                document.getElementById('pTotal').innerText = data.total || "0";
+                document.getElementById('pAvg').innerText = (data.average || "0") + "%";
+                
+                const statusValue = data.status || "PASSED";
+                document.getElementById('pHeaderStatus').innerText = statusValue;
+                document.getElementById('pRibbonStatus').innerText = statusValue;
+
+                // የትምህርት ውጤቶች (40% እና 60% እዚህ ጋር ነው የሚመጡት)
+                const subjects = [
+                    { name: "Mathematics", s40: data.maths40, s60: data.maths60, tot: data.maths },
+                    { name: "English", s40: data.english40, s60: data.english60, tot: data.english },
+                    { name: "Biology", s40: data.biology40, s60: data.biology60, tot: data.biology },
+                    { name: "Chemistry", s40: data.chemistry40, s60: data.chemistry60, tot: data.chemistry },
+                    { name: "Physics", s40: data.physics40, s60: data.physics60, tot: data.physics },
+                    { name: "Geography", s40: data.geography40, s60: data.geography60, tot: data.geography }
+                ];
+
+                let tableRows = "";
+                subjects.forEach(s => {
+                    let grade = s.tot >= 90 ? "A+" : s.tot >= 80 ? "A" : s.tot >= 70 ? "B" : s.tot >= 50 ? "C" : "D";
+                    tableRows += `<tr>
+                        <td style="text-align:left">${s.name}</td>
+                        <td>${s.s40 !== undefined ? s.s40 : "0"}</td>
+                        <td>${s.s60 !== undefined ? s.s60 : "0"}</td>
+                        <td><b>${s.tot || 0}</b></td>
+                        <td>${grade}</td>
+                    </tr>`;
+                });
+                document.getElementById('tableBody').innerHTML = tableRows;
+
+            } else { alert("ID or Password incorrect!"); }
         });
-        document.getElementById('subjectsList').innerHTML = html;
-        document.querySelector('.content').style.display = 'none';
-        document.getElementById('resPanel').style.display = 'block';
     }
 </script>
 </body>
-</html>
+</html>l>
