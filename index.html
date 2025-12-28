@@ -1,52 +1,65 @@
 <!DOCTYPE html>
-<html lang="am">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Damot General School - Student Result</title>
+    <title>Damot General School - Student Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #2c3e50; --secondary: #3498db; --accent: #e74c3c; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; }
-        h2 { color: var(--primary); margin-bottom: 25px; border-bottom: 2px solid var(--secondary); padding-bottom: 10px; }
-        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
-        button { width: 95%; padding: 12px; background: var(--secondary); color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; transition: 0.3s; }
-        button:hover { background: var(--primary); }
-        
-        #resPanel { margin-top: 30px; padding: 20px; border: 1px solid #eee; border-radius: 12px; background: #fafafa; display: none; text-align: left; }
-        .profile-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--secondary); display: block; margin: 0 auto 15px; }
-        .result-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
-        .total-box { background: var(--primary); color: white; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center; }
-        .status-pass { color: #27ae60; font-weight: bold; font-size: 20px; text-align: center; display: block; margin-top: 10px; }
-        .status-fail { color: var(--accent); font-weight: bold; }
+        :root { --primary: #0f172a; --accent: #3b82f6; --success: #10b981; --bg: #f8fafc; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; }
+        .card { background: white; width: 100%; max-width: 480px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); overflow: hidden; }
+        .header { background: var(--primary); color: white; padding: 40px 20px; text-align: center; }
+        .lang-switcher { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 15px; background: #f1f5f9; }
+        .lang-btn { padding: 6px 12px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 20px; cursor: pointer; background: white; transition: 0.3s; }
+        .lang-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .content { padding: 30px; }
+        input { width: 100%; padding: 14px; margin: 12px 0; border: 1.5px solid #e2e8f0; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+        button { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        button:hover { background: #2563eb; transform: translateY(-2px); }
+        #resPanel { display: none; padding: 25px; border-top: 1px solid #f1f5f9; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .profile-img { width: 110px; height: 110px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: block; margin: -55px auto 15px; object-fit: cover; background: #eee; }
+        .score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .score-item { background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px dashed #e2e8f0; display: flex; justify-content: space-between; }
+        .badge { background: var(--primary); color: white; padding: 15px; border-radius: 15px; margin-top: 20px; display: flex; justify-content: space-around; align-items: center; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Damot General School</h2>
-    <p>ውጤትዎን ለማየት መለያ ቁጥርና ሚስጥር ቁጥር ያስገቡ</p>
-    <input type="text" id="admInput" placeholder="Admission Number (e.g. 156100)">
-    <input type="password" id="passInput" placeholder="Password">
-    <button onclick="checkResult()">ውጤት አሳይ</button>
+<div class="card">
+    <div class="header">
+        <h2 id="title">Damot General School</h2>
+        <p id="subtitle" style="opacity: 0.8; font-size: 14px;">Academic Result Portal</p>
+    </div>
+
+    <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('en')">English</button>
+        <button class="lang-btn" onclick="setLang('am')">አማርኛ</button>
+        <button class="lang-btn" onclick="setLang('or')">Oromoo</button>
+        <button class="lang-btn" onclick="setLang('ti')">ትግርኛ</button>
+        <button class="lang-btn" onclick="setLang('so')">Soomaali</button>
+    </div>
+
+    <div class="content">
+        <input type="text" id="admInput" placeholder="Admission ID">
+        <input type="password" id="passInput" placeholder="Password">
+        <button id="btnText" onclick="checkResult()">Check Result</button>
+    </div>
 
     <div id="resPanel">
-        <img id="rPhoto" class="profile-img" src="" alt="Student Photo">
-        <h3 id="rName" style="text-align:center; color: var(--primary);"></h3>
-        <p style="text-align:center; color: #666;">Grade: <span id="rGrade"></span> | Section: <span id="rSection"></span></p>
-        
-        <div class="result-row"><span>Maths:</span> <b id="rMaths"></b></div>
-        <div class="result-row"><span>English:</span> <b id="rEnglish"></b></div>
-        <div class="result-row"><span>Chemistry:</span> <b id="rChemistry"></b></div>
-        <div class="result-row"><span>Biology:</span> <b id="rBiology"></b></div>
-        <div class="result-row"><span>Physics:</span> <b id="rPhysics"></b></div>
-        <div class="result-row"><span>Geography:</span> <b id="rGeography"></b></div>
-        
-        <div class="total-box">
-            <div>ጠቅላላ ውጤት (Total): <span id="rTotal" style="font-size: 20px;"></span></div>
-            <div>አማካይ (Average): <span id="rAverage"></span>%</div>
+        <img id="rPhoto" class="profile-img" src="" alt="Profile">
+        <div style="text-align:center; margin-bottom: 20px;">
+            <h3 id="rName" style="margin: 0; color: #0f172a;"></h3>
+            <p id="rMeta" style="color: #64748b; font-size: 14px; margin-top: 5px;"></p>
         </div>
-        <span id="rStatus" class="status-pass"></span>
+        <div class="score-grid" id="subjectsList"></div>
+        <div class="badge">
+            <div style="text-align:center"><small id="lblTotal">Total</small><div id="rTotal" style="font-weight:600; font-size:18px;"></div></div>
+            <div style="text-align:center"><small id="lblAvg">Average</small><div id="rAverage" style="font-weight:600; font-size:18px;"></div></div>
+        </div>
+        <div id="rStatus" style="text-align:center; margin-top:15px; font-weight:600; font-size:20px;"></div>
     </div>
 </div>
 
@@ -54,54 +67,73 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    // እዚህ ጋር የራስህን የ Firebase Config መረጃ አስገባ
+    // --- YOUR FIREBASE CONFIG (INTEGRATED) ---
     const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT.firebaseapp.com",
-        databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-        projectId: "YOUR_PROJECT",
-        storageBucket: "YOUR_PROJECT.appspot.com",
-        messagingSenderId: "YOUR_ID",
-        appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyDqX185jJuZU5SGEjVVNCGNh5aS0hgov58",
+      authDomain: "damoto-school-result.firebaseapp.com",
+      databaseURL: "https://damoto-school-result-default-rtdb.firebaseio.com",
+      projectId: "damoto-school-result",
+      storageBucket: "damoto-school-result.firebasestorage.app",
+      messagingSenderId: "419800691638",
+      appId: "1:419800691638:web:d08ae5311b85f24bb28717"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    const i18n = {
+        en: { title: "Damot General School", sub: "Academic Result Portal", id: "Admission ID", pass: "Password", btn: "Check Result", total: "Total", avg: "Average", errNotFound: "Student not found!", errPass: "Incorrect password!", subjects: ["Maths", "English", "Chemistry", "Biology", "Physics", "Geography"] },
+        am: { title: "ዳሞት አጠቃላይ ትምህርት ቤት", sub: "የተማሪዎች ውጤት መግቢያ", id: "መለያ ቁጥር", pass: "ሚስጥር ቁጥር", btn: "ውጤት አሳይ", total: "ጠቅላላ", avg: "አማካይ", errNotFound: "ተማሪው አልተገኘም!", errPass: "የተሳሳተ ሚስጥር ቁጥር!", subjects: ["ሒሳብ", "እንግሊዝኛ", "ኬሚስትሪ", "ባዮሎጂ", "ፊዚክስ", "ጂኦግራፊ"] },
+        or: { title: "Mana Barumsa Daamoot", sub: "Seensa Bu'aa Barattootaa", id: "Lakkoofsa Galmee", pass: "Jecha Iccitii", btn: "Bu'aa Ilaali", total: "Waliigala", avg: "Giddu-galeessa", errNotFound: "Barataa hin fandaamne!", errPass: "Jecha iccitii dogoggoraa!", subjects: ["Herrega", "Ingiliffa", "Keemistirii", "Baayoloojii", "Fiiziksii", "Joograafii"] },
+        ti: { title: "ዳሞት ሓፈሻዊ ቤት ትምህርቲ", sub: "መእተዊ ውጽኢት ተምሃሮ", id: "መፍለይ ቑፅሪ", pass: "ሚስጢር ቑፅሪ", btn: "ውፅኢት ምርኣይ", total: "ጠቕላላ", avg: "ማእከላይ", errNotFound: "ተምሃራይ ኣይተረኸበን!", errPass: "ጌጋ ሚስጢር ቑፅሪ!", subjects: ["ሒሳብ", "እንግሊዝኛ", "ኬሚስትሪ", "ባዮሎጂ", "ፊዚክስ", "ጂኦግራፊ"] },
+        so: { title: "Dugsiga Guud ee Damot", sub: "Bogga Natiijada Ardayda", id: "Aqoonsiga Ardayga", pass: "Erayga Sirta", btn: "Fiiri Natiijada", total: "Warta", avg: "Celcelis", errNotFound: "Ardayga lama helin!", errPass: "Erayga sirta waa qalad!", subjects: ["Xisaab", "Ingiriis", "Kimisteri", "Bayoolaji", "Fiisigis", "Juquraafi"] }
+    };
+
+    let currentLang = 'en';
+    function setLang(lang) {
+        currentLang = lang;
+        document.getElementById('title').innerText = i18n[lang].title;
+        document.getElementById('subtitle').innerText = i18n[lang].sub;
+        document.getElementById('admInput').placeholder = i18n[lang].id;
+        document.getElementById('passInput').placeholder = i18n[lang].pass;
+        document.getElementById('btnText').innerText = i18n[lang].btn;
+        document.getElementById('lblTotal').innerText = i18n[lang].total;
+        document.getElementById('lblAvg').innerText = i18n[lang].avg;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+
     function checkResult() {
-        let adm = document.getElementById('admInput').value;
-        let pass = document.getElementById('passInput').value;
-        
-        if(!adm || !pass) { alert("እባክዎ መረጃዎችን በትክክል ይሙሉ!"); return; }
+        const adm = document.getElementById('admInput').value;
+        const pass = document.getElementById('passInput').value;
+        if(!adm || !pass) return;
 
         db.ref('students/' + adm).once('value').then((snapshot) => {
             const data = snapshot.val();
             if (data) {
-                if (data.password == pass) { // Password ማረጋገጫ
-                    document.getElementById('rName').innerText = data.name;
-                    document.getElementById('rGrade').innerText = data.grade;
-                    document.getElementById('rSection').innerText = data.section;
-                    document.getElementById('rMaths').innerText = data.maths;
-                    document.getElementById('rEnglish').innerText = data.english;
-                    document.getElementById('rChemistry').innerText = data.chemistry;
-                    document.getElementById('rBiology').innerText = data.biology;
-                    document.getElementById('rPhysics').innerText = data.physics;
-                    document.getElementById('rGeography').innerText = data.geography;
-                    document.getElementById('rTotal').innerText = data.total;
-                    document.getElementById('rAverage').innerText = data.average;
-                    document.getElementById('rStatus').innerText = data.status;
-                    
-                    if(data.photoURL) { // ፎቶውን ከ GitHub ሊንክ መጫን
-                        document.getElementById('rPhoto').src = data.photoURL;
-                        document.getElementById('rPhoto').style.display = "block";
-                    }
-                    document.getElementById('resPanel').style.display = "block";
-                } else {
-                    alert("የተሳሳተ ሚስጥር ቁጥር!");
-                }
-            } else {
-                alert("ተማሪው አልተገኘም!");
-            }
+                if (data.password == pass) {
+                    showResult(data);
+                } else { alert(i18n[currentLang].errPass); }
+            } else { alert(i18n[currentLang].errNotFound); }
+        }).catch(e => alert("Error: " + e.message));
+    }
+
+    function showResult(data) {
+        document.getElementById('rName').innerText = data.name;
+        document.getElementById('rMeta').innerText = `Grade ${data.grade} • Section ${data.section}`;
+        document.getElementById('rTotal').innerText = data.total;
+        document.getElementById('rAverage').innerText = data.average + "%";
+        document.getElementById('rStatus').innerText = data.status;
+        document.getElementById('rStatus').style.color = data.status.toLowerCase().includes('pass') ? '#10b981' : '#ef4444';
+        if(data.photoURL) document.getElementById('rPhoto').src = data.photoURL;
+
+        const subjects = i18n[currentLang].subjects;
+        const marks = [data.maths, data.english, data.chemistry, data.biology, data.physics, data.geography];
+        let html = '';
+        subjects.forEach((s, i) => {
+            html += `<div class="score-item"><span>${s}</span> <b>${marks[i] || 0}</b></div>`;
         });
+        document.getElementById('subjectsList').innerHTML = html;
+        document.getElementById('resPanel').style.display = 'block';
     }
 </script>
 </body>
