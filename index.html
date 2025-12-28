@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amhara Region Damot Secondary School 2018 Result</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+    <style>
+        body { font-family: sans-serif; background: #f4f4f4; text-align: center; padding: 20px; }
+        .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+        button { width: 95%; padding: 10px; background: #e73c7e; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        #resPanel { display: none; margin-top: 20px; padding: 15px; background: #fff0f5; border-radius: 10px; text-align: left; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>DAMOT SECONDARY SCHOOL</h2>
+    <p>2018 Result Portal</p>
+    <input type="text" id="uId" placeholder="Admission Number (e.g. 156100)">
+    <button id="searchBtn" onclick="fetchResult()">View Result</button>
+
+    <div id="resPanel">
+        <h3 id="rName" style="color: #e73c7e;"></h3>
+        <div id="scoreArea"></div>
+    </div>
+</div>
+
+<script>
+    // ያንተ የ Firebase Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyDqX185jJuZU5SGEjVVNCGNh5aS0hgov58",
+        authDomain: "damoto-school-result.firebaseapp.com",
+        databaseURL: "https://damoto-school-result-default-rtdb.firebaseio.com",
+        projectId: "damoto-school-result",
+        storageBucket: "damoto-school-result.firebasestorage.app",
+        messagingSenderId: "419800691638",
+        appId: "1:419800691638:web:d08ae5311b85f24bb28717"
+    };
+
+    // Firebase-ን ማስጀመር
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function fetchResult() {
+        const id = document.getElementById('uId').value;
+        const btn = document.getElementById('searchBtn');
+        
+        if(!id) return alert("Please enter Admission Number!");
+        btn.innerText = "Searching...";
+
+        // Firebase ውስጥ መፈለግ
+        db.ref('students/' + id).once('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                document.getElementById('resPanel').style.display = "block";
+                document.getElementById('rName').innerText = "Name: " + data.name;
+                document.getElementById('scoreArea').innerHTML = `
+                    <p>Math: ${data.math}</p>
+                    <p>English: ${data.english}</p>
+                    <p>Average: ${data.average}%</p>
+                    <p>Status: <b>${data.status}</b></p>
+                `;
+            } else {
+                alert("Student Not Found! Please check your ID.");
+            }
+            btn.innerText = "View Result";
+        });
+    }
+</script>
+</body>
+</html>
