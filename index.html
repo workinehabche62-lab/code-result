@@ -2,105 +2,75 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1024"> <title>Damot 01 Secondary School Result Portal</title>
+    <meta name="viewport" content="width=1024">
+    <title>Damot 01 Secondary School Official Portal</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <style>
-        :root { 
-            --primary: #003366; --accent: #ffcc00; --success: #2ecc71; 
-            --dark: #000000; --bg: #f4f7f9; 
-        }
-        
-        body { 
-            font-family: 'Poppins', sans-serif; background: var(--bg); 
-            margin: 0; padding: 0; min-height: 100vh; color: #333;
-        }
+        :root { --primary: #003366; --accent: #ffcc00; --success: #2ecc71; --dark: #000000; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
 
-        /* Fixed PC-Style Width */
         .container { 
-            width: 980px; margin: 30px auto; background: white; 
-            border-radius: 30px; box-shadow: 0 25px 60px rgba(0,0,0,0.15); 
-            overflow: hidden; border: 1px solid #ddd;
+            width: 1000px; margin: 30px auto; background: white; 
+            border-radius: 35px; box-shadow: 0 30px 70px rgba(0,0,0,0.2); 
+            overflow: hidden; border: 1px solid #ccc; position: relative;
         }
 
-        .lang-bar { background: #ffffff; padding: 15px; text-align: center; border-bottom: 1px solid #eee; }
+        .lang-bar { background: #fff; padding: 15px; text-align: center; border-bottom: 1px solid #eee; }
         .lang-btn { 
-            background: #f8fafc; border: 1px solid #ddd; padding: 10px 20px; 
-            margin: 4px; cursor: pointer; border-radius: 12px; font-weight: 600;
-            transition: 0.3s; font-family: 'Poppins';
+            background: #f8fafc; border: 1px solid #ddd; padding: 8px 18px; 
+            margin: 4px; cursor: pointer; border-radius: 10px; font-weight: 600; font-family: 'Poppins';
         }
-        .lang-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .lang-btn.active { background: var(--primary); color: white; }
 
         .school-banner { 
-            background: linear-gradient(135deg, #002244 0%, #0055aa 100%); 
-            color: white; padding: 60px 20px; text-align: center; 
+            background: linear-gradient(135deg, #001a33 0%, #004488 100%); 
+            color: white; padding: 70px 20px; text-align: center; 
             border-bottom: 12px solid var(--accent);
         }
-        .school-banner h1 { font-size: 42px; font-weight: 900; margin: 0; letter-spacing: 1px; }
+        .school-banner h1 { font-size: 45px; font-weight: 900; margin: 0; letter-spacing: 2px; }
 
-        .login-card { padding: 80px 20px; text-align: center; }
-        input { 
-            width: 380px; padding: 18px; margin: 12px 0; border: 2px solid #e2e8f0; 
-            border-radius: 15px; font-size: 16px; font-family: 'Poppins'; outline: none;
-        }
+        .login-card, .admin-card { padding: 100px 20px; text-align: center; }
+        input, textarea { width: 380px; padding: 18px; margin: 12px 0; border: 2px solid #e2e8f0; border-radius: 15px; font-size: 16px; outline: none; font-family: 'Poppins'; }
+        .btn-main { background: var(--primary); color: white; padding: 18px 60px; border: none; border-radius: 15px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
 
-        .btn-main { 
-            background: var(--primary); color: white; padding: 18px 60px; 
-            border: none; border-radius: 15px; cursor: pointer; font-weight: 800; 
-            font-size: 17px; margin-top: 25px; transition: 0.3s;
-        }
-
-        #resultArea { display: none; padding: 50px; }
+        #resultArea, #adminArea { display: none; padding: 50px; }
         
-        .profile-header { text-align: center; margin-bottom: 45px; }
-        .student-photo { 
-            width: 170px; height: 170px; border-radius: 50%; border: 6px solid white; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin: 0 auto 20px; display: block; object-fit: cover;
-        }
+        /* ስሙ መደበኛ ፎንት እና መጠኑ አነስ ያለ እንዲሆን ተስተካክሏል */
+        #pName { font-family: 'Poppins', sans-serif; font-size: 36px; font-weight: 800; color: var(--dark); text-align: center; margin: 0; text-transform: uppercase; }
+        
+        .report-label { display: block; text-align: center; font-weight: 800; color: var(--primary); font-size: 16px; letter-spacing: 3px; margin-bottom: 40px; }
 
-        /* የተማሪ ስም በጥቁር ቀለም እና በትልቅ ፎንት */
-        #pName { 
-            font-size: 45px; font-weight: 900; color: var(--dark); 
-            margin: 10px 0; letter-spacing: -1px; 
-        }
-
-        .report-label { 
-            font-size: 14px; font-weight: 800; color: var(--primary); 
-            text-transform: uppercase; background: #eef2f7; padding: 6px 22px; border-radius: 50px;
-        }
-
-        .grid-info { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 40px 0; }
-        .info-cell { background: #f8fafc; padding: 15px; border-radius: 15px; border: 1px solid #edf2f7; }
-        .info-cell label { font-size: 10px; color: #888; font-weight: 800; text-transform: uppercase; }
-        .info-cell div { font-size: 15px; font-weight: 700; color: #1e293b; margin-top: 5px; }
+        .grid-info { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; }
+        .info-cell { background: #f8fafc; padding: 20px; border-radius: 15px; border: 1px solid #eee; }
+        .info-cell label { font-size: 11px; color: #888; font-weight: 800; display: block; text-transform: uppercase; }
+        .info-cell div { font-size: 17px; font-weight: 700; color: #1a202c; margin-top: 5px; }
 
         .summary-ribbon { 
             display: flex; justify-content: space-around; background: var(--primary); 
-            border-radius: 20px; padding: 30px; margin-bottom: 40px; color: white;
+            border-radius: 25px; padding: 40px; margin-bottom: 50px; color: white;
         }
-        .ribbon-item b { font-size: 35px; color: var(--accent); display: block; }
+        .ribbon-item b { font-size: 40px; color: var(--accent); display: block; }
+        #pStatus { color: var(--success) !important; }
 
-        /* Passed Status in Green */
-        #pStatus { color: #2ecc71 !important; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 50px; }
+        th { background: #f1f5f9; padding: 22px; font-size: 13px; text-transform: uppercase; font-weight: 800; }
+        td { padding: 18px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: 700; font-size: 18px; }
 
-        .chart-container { background: white; padding: 25px; border-radius: 20px; border: 1px solid #eee; margin-bottom: 40px; }
+        .action-bar { text-align: center; padding-bottom: 60px; }
+        .btn-pdf { background: #111; color: white; padding: 20px 50px; border-radius: 15px; border: none; cursor: pointer; font-weight: 700; }
+        .btn-call { background: #22c55e; color: white; padding: 20px 50px; border-radius: 15px; text-decoration: none; font-weight: 700; display: inline-block; margin-left: 15px; }
         
-        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-        th { background: #f1f5f9; padding: 20px; font-size: 12px; text-transform: uppercase; font-weight: 800; color: #444; }
-        td { padding: 15px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: 600; font-size: 16px; }
-
-        .btn-pdf { background: #111; color: white; padding: 18px 45px; border-radius: 15px; border: none; cursor: pointer; font-weight: 700; }
-        .btn-call { background: #25d366; color: white; padding: 18px 45px; border-radius: 15px; text-decoration: none; font-weight: 700; display: inline-block; }
+        .admin-link { position: absolute; bottom: 10px; right: 20px; font-size: 12px; color: #ccc; text-decoration: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="container" id="printableArea">
-    <div class="lang-bar">
+    <div class="lang-bar no-pdf">
         <button class="lang-btn active" onclick="setLanguage('am', this)">አማርኛ</button>
         <button class="lang-btn" onclick="setLanguage('en', this)">English</button>
         <button class="lang-btn" onclick="setLanguage('om', this)">Oromoo</button>
@@ -110,27 +80,39 @@
 
     <div class="school-banner">
         <h1 id="t_school">DAMOT 01 SECONDARY SCHOOL</h1>
-        <p id="t_slogan">Excellence Through Hard Work & Discipline</p>
+        <p id="t_slogan">Quality Education for a Better Future</p>
     </div>
 
     <div id="loginSection" class="login-card">
         <h2 id="t_welcome">እንኳን ደህና መጡ!</h2>
         <input type="text" id="regName" placeholder="Full Name">
-        <br>
         <input type="text" id="regID" placeholder="ID Number">
-        <br>
         <input type="password" id="regPass" placeholder="Password">
         <br>
-        <button class="btn-main" id="t_viewBtn" onclick="loadStudentResult()">View Result</button>
+        <button class="btn-main" id="t_viewBtn" onclick="loadStudentResult()">View My Result</button>
+    </div>
+
+    <div id="adminLoginSection" class="admin-card" style="display:none;">
+        <h2>Admin Operator Access</h2>
+        <input type="password" id="adminKey" placeholder="Enter Admin Secret Key">
+        <br>
+        <button class="btn-main" onclick="accessAdmin()">Access Admin Area</button>
+    </div>
+
+    <div id="adminArea">
+        <h2>Admin Operator - Bulk Upload</h2>
+        <p>Paste your 1,500 students JSON here:</p>
+        <textarea id="bulkData" rows="10" style="width:100%;" placeholder='{"1001": {"name": "Test", "maths": 90...}}'></textarea>
+        <br>
+        <button class="btn-main" onclick="uploadData()">Upload to Firebase</button>
+        <button class="btn-main" style="background:#666;" onclick="location.reload()">Back</button>
     </div>
 
     <div id="resultArea">
-        <div class="profile-header">
-            <img id="pPhoto" src="" class="student-photo">
-            <div id="pName"></div>
-            <div class="report-label" id="pIDLabel">OFFICIAL REPORT CARD</div>
-        </div>
-        
+        <img id="pPhoto" src="" style="width:160px; height:160px; border-radius:50%; display:block; margin:0 auto 20px; border:8px solid #fff; box-shadow:0 10px 20px rgba(0,0,0,0.1);">
+        <div id="pName"></div>
+        <div class="report-label" id="pIDLabel">OFFICIAL STUDENT TRANSCRIPT</div>
+
         <div class="grid-info">
             <div class="info-cell"><label id="l_id">ID No</label><div id="pID"></div></div>
             <div class="info-cell"><label id="l_gen">Gender</label><div id="pGen"></div></div>
@@ -143,13 +125,9 @@
         </div>
 
         <div class="summary-ribbon">
-            <div class="ribbon-item"><span id="l_total">Total</span><b id="pTotal"></b></div>
+            <div class="ribbon-item"><span id="l_total">Total Score</span><b id="pTotal"></b></div>
             <div class="ribbon-item"><span id="l_avg">Average</span><b id="pAvg"></b></div>
             <div class="ribbon-item"><span id="l_status">Status</span><b id="pStatus"></b></div>
-        </div>
-
-        <div class="chart-container">
-            <canvas id="performanceChart" height="100"></canvas>
         </div>
 
         <table>
@@ -159,11 +137,13 @@
             <tbody id="tableBody"></tbody>
         </table>
 
-        <div style="text-align:center; padding-bottom:40px;">
-            <button class="btn-pdf" id="t_download" onclick="downloadPDF()">Download PDF</button>
+        <div class="action-bar no-pdf">
+            <button class="btn-pdf" id="t_download" onclick="downloadPDF()">Download PDF Report</button>
             <a href="tel:0961364574" class="btn-call">📞 <span id="t_call">Support</span></a>
         </div>
     </div>
+    
+    <div class="admin-link no-pdf" onclick="showAdminLogin()">Admin Operator</div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -171,21 +151,15 @@
 
 <script>
     const translations = {
-        am: { school: "ዳሞት 01 ሁለተኛ ደረጃ ትምህርት ቤት", slogan: "በትጋት እና በስነ-ምግባር ወደ ላቀ ውጤት", welcome: "እንኳን ደህና መጡ!", viewBtn: "ውጤት ይመልከቱ", l_id: "መለያ ቁጥር", l_gen: "ጾታ", l_grade: "ክፍል", l_year: "ዘመን", l_nat: "ዜግነት", l_zone: "ዞን", l_wor: "ወረዳ", l_sch: "ትምህርት ቤት", l_total: "ድምር", l_avg: "አማካይ", l_status: "ሁኔታ", h_sub: "ትምህርት", h_tot: "ድምር", h_grd: "ደረጃ", download: "PDF አውርድ", call: "ቅሬታ: 0961364574", report: "ኦፊሴላዊ የውጤት መግለጫ",
-              sNames: ["ሒሳብ", "እንግሊዝኛ", "ኬሚስትሪ", "ፊዚክስ", "ባዮሎጂ", "ጂኦግራፊ", "ታሪክ", "አይሲቲ", "ኤችፒ", "አማርኛ", "ዜግነት", "ኢኮኖሚክስ"] },
-        en: { school: "DAMOT 01 SECONDARY SCHOOL", slogan: "Excellence Through Discipline", welcome: "Welcome!", viewBtn: "View Result", l_id: "ID No", l_gen: "Gender", l_grade: "Grade", l_year: "Year", l_nat: "Nationality", l_zone: "Zone", l_wor: "Woreda", l_sch: "School", l_total: "Total", l_avg: "Avg", l_status: "Status", h_sub: "Subject", h_tot: "Total", h_grd: "Grade", download: "Download PDF", call: "Support", report: "OFFICIAL REPORT CARD",
-              sNames: ["Maths", "English", "Chemistry", "Physics", "Biology", "Geography", "History", "ICT", "HP", "Amharic", "Citizenship", "Economics"] },
-        om: { school: "MANA BARUMSA DAMOT 01", slogan: "Barnoota Qulqulluu", welcome: "Baga Nagaan Dhuftan!", viewBtn: "Bu'aa Ilaali", l_id: "ID", l_gen: "Korniyaa", l_grade: "Kutaa", l_year: "Bara", l_nat: "Lammummaa", l_zone: "Zoonii", l_wor: "Aanaa", l_sch: "Mana Barumsaa", l_total: "Ida'ama", l_avg: "Avg", l_status: "Haala", h_sub: "Barnoota", h_tot: "Total", h_grd: "Gireedii", download: "PDF Buusi", call: "Koomii", report: "GABAASA BU'AA",
-              sNames: ["Maatiiksii", "Ingiliffa", "Keemistirii", "Fiiziksii", "Baayoloojii", "Ji'oogiraafii", "Seenaa", "ICT", "HP", "Amharic", "Citizenship", "Economics"] },
-        so: { school: "DUGSIYADA SARE EE DAMOT 01", slogan: "Waxbarasho tayo leh", welcome: "Ku soo dhawaada!", viewBtn: "Arag Natiijada", l_id: "ID", l_gen: "Lab/Dhadig", l_grade: "Fasalka", l_year: "Sannadka", l_nat: "Dhalashada", l_zone: "Aagga", l_wor: "Degmada", l_sch: "Dugsiga", l_total: "Warta", l_avg: "Avg", l_status: "Xaaladda", h_sub: "Maadada", h_tot: "Total", h_grd: "Darajada", download: "Soo deji PDF", call: "Cabashada", report: "WARBIXINTA NATIIJADA",
-              sNames: ["Xisaab", "Ingiriisi", "Kimisteri", "Fiisigis", "Bayoolaji", "Juqraafi", "Taariikh", "ICT", "HP", "Amxaari", "Muwaadin", "Dhaqaalaha"] },
-        ti: { school: "ቤት ትምህርቲ ዳሞት 01", slogan: "ፅሬት ዘለዎ ትምህርቲ", welcome: "እንኳዕ ብደሓን መጻእኩም!", viewBtn: "ውጽኢት ርአ", l_id: "መፍለዪ", l_gen: "ፆታ", l_grade: "ክፍሊ", l_year: "ዓመት", l_nat: "ዜግነት", l_zone: "ዞባ", l_wor: "ወረዳ", l_sch: "ቤት ትምህርቲ", l_total: "ጠቕላላ", l_avg: "Avg", l_status: "ኩነታት", h_sub: "ትምህርቲ", h_tot: "ድምር", h_grd: "ደረጃ", download: "PDF ኣውርድ", call: "ቅሬታ", report: "መግለፂ ውፅኢት",
-              sNames: ["ሒሳብ", "እንግሊዝኛ", "ኬሚስትሪ", "ፊዚክስ", "ባዮሎጂ", "ጂኦግራፊ", "ታሪክ", "ICT", "HP", "ኣምሓርኛ", "ዜግነት", "ኢኮኖሚክስ"] }
+        am: { school: "ዳሞት 01 ሁለተኛ ደረጃ ትምህርት ቤት", slogan: "ጥራት ያለው ትምህርት ለተሻለ መጻኢ", welcome: "እንኳን ደህና መጡ!", viewBtn: "ውጤት ይመልከቱ", l_id: "መለያ ቁጥር", l_gen: "ጾታ", l_grade: "ክፍል", l_year: "ዘመን", l_nat: "ዜግነት", l_zone: "ዞን", l_wor: "ወረዳ", l_sch: "ትምህርት ቤት", l_total: "ድምር", l_avg: "አማካይ", l_status: "ሁኔታ", h_sub: "ትምህርት", h_tot: "ድምር", h_grd: "ደረጃ", download: "PDF አውርድ", call: "ቅሬታ", report: "ኦፊሴላዊ የውጤት መግለጫ", sNames: ["ሒሳብ", "እንግሊዝኛ", "ኬሚስትሪ", "ፊዚክስ", "ባዮሎጂ", "ጂኦግራፊ", "ታሪክ", "አይሲቲ", "ኤችፒ", "አማርኛ", "ዜግነት", "ኢኮኖሚክስ"] },
+        en: { school: "DAMOT 01 SECONDARY SCHOOL", slogan: "Quality Education", welcome: "Welcome!", viewBtn: "View Result", l_id: "ID", l_gen: "Gender", l_grade: "Grade", l_year: "Year", l_nat: "Nationality", l_zone: "Zone", l_wor: "Woreda", l_sch: "School", l_total: "Total", l_avg: "Avg", l_status: "Status", h_sub: "Subject", h_tot: "Total", h_grd: "Grade", download: "Download PDF", call: "Support", report: "OFFICIAL TRANSCRIPT", sNames: ["Maths", "English", "Chemistry", "Physics", "Biology", "Geography", "History", "ICT", "HP", "Amharic", "Citizenship", "Economics"] },
+        om: { school: "MANA BARUMSA DAMOT 01", slogan: "Barnoota Qulqulluu", welcome: "Baga Nagaan Dhuftan!", viewBtn: "Bu'aa Ilaali", l_id: "ID", l_gen: "Korniyaa", l_grade: "Kutaa", l_year: "Bara", l_nat: "Lammummaa", l_zone: "Zoonii", l_wor: "Aanaa", l_sch: "Mana Barumsaa", l_total: "Ida'ama", l_avg: "Avg", l_status: "Haala", h_sub: "Barnoota", h_tot: "Total", h_grd: "Gireedii", download: "PDF Buusi", call: "Koomii", report: "GABAASA BU'AA", sNames: ["Maatiiksii", "Ingiliffa", "Keemistirii", "Fiiziksii", "Baayoloojii", "Ji'oogiraafii", "Seenaa", "ICT", "HP", "Amharic", "Citizenship", "Economics"] },
+        so: { school: "DUGSIYADA DAMOT 01", slogan: "Waxbarasho tayo leh", welcome: "Ku soo dhawaada!", viewBtn: "Arag Natiijada", l_id: "ID", l_gen: "Lab/Dhadig", l_grade: "Fasalka", l_year: "Sannadka", l_nat: "Dhalashada", l_zone: "Aagga", l_wor: "Degmada", l_sch: "Dugsiga", l_total: "Warta", l_avg: "Avg", l_status: "Xaaladda", h_sub: "Maadada", h_tot: "Total", h_grd: "Darajada", download: "PDF", call: "Cabashada", report: "NATIIJADA", sNames: ["Xisaab", "Ingiriisi", "Kimisteri", "Fiisigis", "Bayoolaji", "Juqraafi", "Taariikh", "ICT", "HP", "Amxaari", "Muwaadin", "Dhaqaalaha"] },
+        ti: { school: "ቤት ትምህርቲ ዳሞት 01", slogan: "ፅሬት ዘለዎ ትምህርቲ", welcome: "እንኳዕ ብደሓን መጻእኩም!", viewBtn: "ውጽኢት ርአ", l_id: "መፍለዪ", l_gen: "ፆታ", l_grade: "ክፍሊ", l_year: "ዓመት", l_nat: "ዜግነት", l_zone: "ዞባ", l_wor: "ወረዳ", l_sch: "ቤት ትምህርቲ", l_total: "ጠቕላላ", l_avg: "Avg", l_status: "ኩነታት", h_sub: "ትምህርቲ", h_tot: "ድምር", h_grd: "ደረጃ", download: "PDF ኣውርድ", call: "ቅሬታ", report: "መግለፂ ውፅኢት", sNames: ["ሒሳብ", "እንግሊዝኛ", "ኬሚስትሪ", "ፊዚክስ", "ባዮሎጂ", "ጂኦግራፊ", "ታሪክ", "ICT", "HP", "ኣምሓርኛ", "ዜግነት", "ኢኮኖሚክስ"] }
     };
 
     let activeLang = 'am';
     let studentData = null;
-    let myChart = null;
 
     const firebaseConfig = {
       apiKey: "AIzaSyDqX185jJuZU5SGEjVVNCGNh5aS0hgov58",
@@ -219,49 +193,43 @@
         document.getElementById('t_download').innerText = t.download;
         document.getElementById('t_call').innerText = t.call;
         document.getElementById('pIDLabel').innerText = t.report;
-
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
         if(btn) btn.classList.add('active');
-        if(studentData) { renderTable(); updateChart(); }
+        if(studentData) renderTable();
     }
 
     function loadStudentResult() {
         const nameIn = document.getElementById('regName').value.trim();
         const idIn = document.getElementById('regID').value.trim();
         const passIn = document.getElementById('regPass').value.trim();
-
         db.ref('students/' + idIn).once('value').then(snap => {
             const d = snap.val();
             if(d && d.password == passIn && d.name.toLowerCase() === nameIn.toLowerCase()) {
                 studentData = d;
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('resultArea').style.display = 'block';
-                document.getElementById('pPhoto').src = d.photoURL || "https://via.placeholder.com/170";
-                document.getElementById('pName').innerText = d.name; // Full Black Name
-
+                document.getElementById('pPhoto').src = d.photoURL || "https://via.placeholder.com/180";
+                document.getElementById('pName').innerText = d.name;
                 document.getElementById('pID').innerText = idIn;
                 document.getElementById('pGen').innerText = d.gender;
-                document.getElementById('pGrade').innerText = d.grade + " (" + (d.section||'A') + ")";
+                document.getElementById('pGrade').innerText = d.grade;
                 document.getElementById('pYear').innerText = d.academicYear || "2018 E.C";
                 document.getElementById('pNat').innerText = d.nationality || "Ethiopian";
                 document.getElementById('pZone').innerText = d.zone || "East Gojjam";
                 document.getElementById('pWor').innerText = d.woreda || "Hulet Eju Enese";
-                document.getElementById('pSch').innerText = d.school || "Damot 01 Secondary School";
-                
+                document.getElementById('pSch').innerText = "Damot 01 Secondary School";
                 document.getElementById('pTotal').innerText = d.total;
                 document.getElementById('pAvg').innerText = d.average + "%";
                 document.getElementById('pStatus').innerText = d.status;
-
                 renderTable();
-                updateChart();
-            } else { alert("Correct Name, ID or Password Required!"); }
+            } else { alert("Correct Credentials Required!"); }
         });
     }
 
     function renderTable() {
         const d = studentData;
         const sNames = translations[activeLang].sNames;
-        const subMap = [
+        const subList = [
             {n: sNames[0], t: d.maths, s4: d.maths40, s6: d.maths60}, {n: sNames[1], t: d.english, s4: d.english40, s6: d.english60},
             {n: sNames[2], t: d.chemistry, s4: d.chemistry40, s6: d.chemistry60}, {n: sNames[3], t: d.physics, s4: d.physics40, s6: d.physics60},
             {n: sNames[4], t: d.biology, s4: d.biology40, s6: d.biology60}, {n: sNames[5], t: d.geography, s4: d.geography40, s6: d.geography60},
@@ -269,39 +237,49 @@
             {n: sNames[8], t: d.hp, s4: d.hp40, s6: d.hp60}, {n: sNames[9], t: d.amharic, s4: d.amharic40, s6: d.amharic60},
             {n: sNames[10], t: d.citizenship, s4: d.citizenship40, s6: d.citizenship60}, {n: sNames[11], t: d.economics, s4: d.economics40, s6: d.economics60}
         ];
-
-        let html = "";
-        subMap.forEach(s => {
+        let h = "";
+        subList.forEach(s => {
             let g = s.t >= 90 ? "A+" : s.t >= 80 ? "A" : s.t >= 70 ? "B" : s.t >= 50 ? "C" : "D";
-            html += `<tr><td>${s.n}</td><td>${s.s4||0}</td><td>${s.s6||0}</td><td><b>${s.t||0}</b></td><td><b>${g}</b></td></tr>`;
+            h += `<tr><td style="text-align:left;">${s.n}</td><td>${s.s4||0}</td><td>${s.s6||0}</td><td><b>${s.t||0}</b></td><td><b>${g}</b></td></tr>`;
         });
-        document.getElementById('tableBody').innerHTML = html;
-    }
-
-    function updateChart() {
-        const d = studentData;
-        const ctx = document.getElementById('performanceChart').getContext('2d');
-        const sNames = translations[activeLang].sNames;
-        const scores = [d.maths, d.english, d.chemistry, d.physics, d.biology, d.geography, d.history, d.ict, d.hp, d.amharic, d.citizenship, d.economics];
-
-        if(myChart) myChart.destroy();
-        myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: sNames,
-                datasets: [{ label: 'Score', data: scores, backgroundColor: '#003366', borderRadius: 5 }]
-            },
-            options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100 } } }
-        });
+        document.getElementById('tableBody').innerHTML = h;
     }
 
     function downloadPDF() {
         const element = document.getElementById('printableArea');
-        html2pdf().set({
-            margin: 0, filename: 'Damot01_Result.pdf',
-            html2canvas: { scale: 2, useCORS: true },
+        const opt = {
+            margin: 0,
+            filename: 'Damot01_Result.pdf',
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 2, useCORS: true, logging: false },
             jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-        }).from(element).save();
+        };
+        document.querySelectorAll('.no-pdf').forEach(el => el.style.visibility = 'hidden');
+        html2pdf().from(element).set(opt).save().then(() => {
+            document.querySelectorAll('.no-pdf').forEach(el => el.style.visibility = 'visible');
+        });
+    }
+
+    function showAdminLogin() {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('adminLoginSection').style.display = 'block';
+    }
+
+    function accessAdmin() {
+        const key = document.getElementById('adminKey').value;
+        if(key === "damot123") {
+            document.getElementById('adminLoginSection').style.display = 'none';
+            document.getElementById('adminArea').style.display = 'block';
+        } else { alert("Access Denied!"); }
+    }
+
+    function uploadData() {
+        try {
+            const data = JSON.parse(document.getElementById('bulkData').value);
+            db.ref('students').update(data).then(() => {
+                alert("Students uploaded successfully!");
+            });
+        } catch(e) { alert("Invalid JSON format!"); }
     }
 </script>
 </body>
