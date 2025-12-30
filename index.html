@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        :root { --primary: #003366; --accent: #ffcc00; --success: #2ecc71; --dark: #000000; }
+        :root { --primary: #003366; --accent: #ffcc00; --success: #2ecc71; --danger: #e74c3c; --dark: #000000; }
         body { font-family: 'Poppins', sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
 
         .container { 
@@ -36,10 +36,10 @@
         .login-card, .admin-card { padding: 100px 20px; text-align: center; }
         input, textarea { width: 380px; padding: 18px; margin: 12px 0; border: 2px solid #e2e8f0; border-radius: 15px; font-size: 16px; outline: none; font-family: 'Poppins'; }
         .btn-main { background: var(--primary); color: white; padding: 18px 60px; border: none; border-radius: 15px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
+        .btn-danger { background: var(--danger); color: white; padding: 15px 40px; border: none; border-radius: 15px; cursor: pointer; font-weight: 800; text-transform: uppercase; margin-top: 10px; }
 
         #resultArea, #adminArea { display: none; padding: 50px; }
         
-        /* ስሙ መደበኛ ፎንት እና መጠኑ አነስ ያለ እንዲሆን ተስተካክሏል */
         #pName { font-family: 'Poppins', sans-serif; font-size: 36px; font-weight: 800; color: var(--dark); text-align: center; margin: 0; text-transform: uppercase; }
         
         .report-label { display: block; text-align: center; font-weight: 800; color: var(--primary); font-size: 16px; letter-spacing: 3px; margin-bottom: 40px; }
@@ -100,8 +100,17 @@
     </div>
 
     <div id="adminArea">
-        <h2>Admin Operator - Bulk Upload</h2>
-        <p>Paste your 1,500 students JSON here:</p>
+        <div style="background: #fff5f5; padding: 30px; border-radius: 20px; margin-bottom: 30px; border: 1px solid #ffcccc;">
+            <h3 style="color: var(--danger); margin-top:0;">Delete Single Student</h3>
+            <p>Enter Student ID to remove from database:</p>
+            <input type="text" id="deleteID" placeholder="Student ID (e.g. 156001)">
+            <br>
+            <button class="btn-danger" onclick="deleteStudent()">Delete This Student</button>
+        </div>
+
+        <hr>
+        <h3>Bulk Upload Students (JSON)</h3>
+        <p>write your students JSON here:</p>
         <textarea id="bulkData" rows="10" style="width:100%;" placeholder='{"1001": {"name": "Test", "maths": 90...}}'></textarea>
         <br>
         <button class="btn-main" onclick="uploadData()">Upload to Firebase</button>
@@ -151,11 +160,11 @@
 
 <script>
     const translations = {
-        am: { school: "ዳሞት 01 ሁለተኛ ደረጃ ትምህርት ቤት", slogan: "ጥራት ያለው ትምህርት ለተሻለ መጻኢ", welcome: "እንኳን ደህና መጡ!", viewBtn: "ውጤት ይመልከቱ", l_id: "መለያ ቁጥር", l_gen: "ጾታ", l_grade: "ክፍል", l_year: "ዘመን", l_nat: "ዜግነት", l_zone: "ዞን", l_wor: "ወረዳ", l_sch: "ትምህርት ቤት", l_total: "ድምር", l_avg: "አማካይ", l_status: "ሁኔታ", h_sub: "ትምህርት", h_tot: "ድምር", h_grd: "ደረጃ", download: "PDF አውርድ", call: "ቅሬታ", report: "ኦፊሴላዊ የውጤት መግለጫ", sNames: ["ሒሳብ", "እንግሊዝኛ", "ኬሚስትሪ", "ፊዚክስ", "ባዮሎጂ", "ጂኦግራፊ", "ታሪክ", "አይሲቲ", "ኤችፒ", "አማርኛ", "ዜግነት", "ኢኮኖሚክስ"] },
+        am: { school: "ዳሞት 01 ሁለተኛ ደረጃ ትምህርት ቤት", slogan: "ጥራት ያለው ትምህርት ለተሻለ ህይወት ", welcome: "እንኳን ደህና መጡ!", viewBtn: "ውጤት ይመልከቱ", l_id: "መለያ ቁጥር", l_gen: "ጾታ", l_grade: "ክፍል", l_year: "ዘመን", l_nat: "ዜግነት", l_zone: "ዞን", l_wor: "ወረዳ", l_sch: "ትምህርት ቤት", l_total: "ድምር", l_avg: "አማካይ", l_status: "ሁኔታ", h_sub: "ትምህርት", h_tot: "ድምር", h_grd: "ደረጃ", download: "PDF አውርድ", call: "ቅሬታ", report: "ኦፊሴላዊ የውጤት መግለጫ", sNames: ["ሒሳብ", "እንግሊዝኛ", "ኬሚስትሪ", "ፊዚክስ", "ባዮሎጂ", "ጂኦግራፊ", "ታሪክ", "አይሲቲ", "ኤችፒ", "አማርኛ", "ዜግነት", "ኢኮኖሚክስ"] },
         en: { school: "DAMOT 01 SECONDARY SCHOOL", slogan: "Quality Education", welcome: "Welcome!", viewBtn: "View Result", l_id: "ID", l_gen: "Gender", l_grade: "Grade", l_year: "Year", l_nat: "Nationality", l_zone: "Zone", l_wor: "Woreda", l_sch: "School", l_total: "Total", l_avg: "Avg", l_status: "Status", h_sub: "Subject", h_tot: "Total", h_grd: "Grade", download: "Download PDF", call: "Support", report: "OFFICIAL TRANSCRIPT", sNames: ["Maths", "English", "Chemistry", "Physics", "Biology", "Geography", "History", "ICT", "HP", "Amharic", "Citizenship", "Economics"] },
         om: { school: "MANA BARUMSA DAMOT 01", slogan: "Barnoota Qulqulluu", welcome: "Baga Nagaan Dhuftan!", viewBtn: "Bu'aa Ilaali", l_id: "ID", l_gen: "Korniyaa", l_grade: "Kutaa", l_year: "Bara", l_nat: "Lammummaa", l_zone: "Zoonii", l_wor: "Aanaa", l_sch: "Mana Barumsaa", l_total: "Ida'ama", l_avg: "Avg", l_status: "Haala", h_sub: "Barnoota", h_tot: "Total", h_grd: "Gireedii", download: "PDF Buusi", call: "Koomii", report: "GABAASA BU'AA", sNames: ["Maatiiksii", "Ingiliffa", "Keemistirii", "Fiiziksii", "Baayoloojii", "Ji'oogiraafii", "Seenaa", "ICT", "HP", "Amharic", "Citizenship", "Economics"] },
         so: { school: "DUGSIYADA DAMOT 01", slogan: "Waxbarasho tayo leh", welcome: "Ku soo dhawaada!", viewBtn: "Arag Natiijada", l_id: "ID", l_gen: "Lab/Dhadig", l_grade: "Fasalka", l_year: "Sannadka", l_nat: "Dhalashada", l_zone: "Aagga", l_wor: "Degmada", l_sch: "Dugsiga", l_total: "Warta", l_avg: "Avg", l_status: "Xaaladda", h_sub: "Maadada", h_tot: "Total", h_grd: "Darajada", download: "PDF", call: "Cabashada", report: "NATIIJADA", sNames: ["Xisaab", "Ingiriisi", "Kimisteri", "Fiisigis", "Bayoolaji", "Juqraafi", "Taariikh", "ICT", "HP", "Amxaari", "Muwaadin", "Dhaqaalaha"] },
-        ti: { school: "ቤት ትምህርቲ ዳሞት 01", slogan: "ፅሬት ዘለዎ ትምህርቲ", welcome: "እንኳዕ ብደሓን መጻእኩም!", viewBtn: "ውጽኢት ርአ", l_id: "መፍለዪ", l_gen: "ፆታ", l_grade: "ክፍሊ", l_year: "ዓመት", l_nat: "ዜግነት", l_zone: "ዞባ", l_wor: "ወረዳ", l_sch: "ቤት ትምህርቲ", l_total: "ጠቕላላ", l_avg: "Avg", l_status: "ኩነታት", h_sub: "ትምህርቲ", h_tot: "ድምር", h_grd: "ደረጃ", download: "PDF ኣውርድ", call: "ቅሬታ", report: "መግለፂ ውፅኢት", sNames: ["ሒሳብ", "እንግሊዝኛ", "ኬሚስትሪ", "ፊዚክስ", "ባዮሎጂ", "ጂኦግራፊ", "ታሪክ", "ICT", "HP", "ኣምሓርኛ", "ዜግነት", "ኢኮኖሚክስ"] }
+        ti: { school: "ቤት ትምህርቲ ቤት ዳሞት 01", slogan: "ፅሬት ዘለዎ ትምህርቲ", welcome: "እንኳዕ ብደሓን መጻእኩም!", viewBtn: "ውጽኢት ርአ", l_id: "መፍለዪ", l_gen: "ፆታ", l_grade: "ክፍሊ", l_year: "ዓመት", l_nat: "ዜግነት", l_zone: "ዞባ", l_wor: "ወረዳ", l_sch: "ቤት ትምህርቲ", l_total: "ጠቕላላ", l_avg: "Avg", l_status: "ኩነታት", h_sub: "ትምህርቲ", h_tot: "ድምር", h_grd: "ደረጃ", download: "PDF ኣውርድ", call: "ቅሬታ", report: "መግለፂ ውፅኢት", sNames: ["ሒሳብ", "እንግሊዝኛ", "ኬሚስትሪ", "ፊዚክስ", "ባዮሎጂ", "ጂኦግራፊ", "ታሪክ", "ICT", "HP", "ኣምሓርኛ", "ዜግነት", "ኢኮኖሚክስ"] }
     };
 
     let activeLang = 'am';
@@ -248,10 +257,8 @@
     function downloadPDF() {
         const element = document.getElementById('printableArea');
         const opt = {
-            margin: 0,
-            filename: 'Damot01_Result.pdf',
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: { scale: 2, useCORS: true, logging: false },
+            margin: 0, filename: 'Damot01_Result.pdf', image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 2, useCORS: true },
             jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
         };
         document.querySelectorAll('.no-pdf').forEach(el => el.style.visibility = 'hidden');
@@ -266,8 +273,7 @@
     }
 
     function accessAdmin() {
-        const key = document.getElementById('adminKey').value;
-        if(key === "damot123") {
+        if(document.getElementById('adminKey').value === "damot1q2w3e4@") {
             document.getElementById('adminLoginSection').style.display = 'none';
             document.getElementById('adminArea').style.display = 'block';
         } else { alert("Access Denied!"); }
@@ -276,10 +282,19 @@
     function uploadData() {
         try {
             const data = JSON.parse(document.getElementById('bulkData').value);
-            db.ref('students').update(data).then(() => {
-                alert("Students uploaded successfully!");
-            });
+            db.ref('students').update(data).then(() => alert("Students uploaded successfully!"));
         } catch(e) { alert("Invalid JSON format!"); }
+    }
+
+    function deleteStudent() {
+        const id = document.getElementById('deleteID').value.trim();
+        if(!id) { alert("Please enter Student ID!"); return; }
+        if(confirm("Are you sure you want to delete ID: " + id + "?")) {
+            db.ref('students/' + id).remove().then(() => {
+                alert("Student deleted successfully!");
+                document.getElementById('deleteID').value = "";
+            });
+        }
     }
 </script>
 </body>
